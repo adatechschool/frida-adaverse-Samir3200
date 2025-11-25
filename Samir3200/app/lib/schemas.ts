@@ -23,6 +23,6 @@ export const studentProject = pgTable("studentProject", {
     DemoLink: text("Demolink").notNull(),
     DateCreat: text("DateCreat").notNull(),
     PublicDate: text("PublicDate").notNull(),
-    PromoLink: text("PromoLink").notNull(),
-    ProjetLink: text("ProjetLink").notNull()
+    Frida_id: serial("Frida_id").notNull(),
+    Promo_id: serial("Promo_id").notNull()
 });
