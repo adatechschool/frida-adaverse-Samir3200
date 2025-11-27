@@ -1,28 +1,31 @@
-import { pgTable, serial, text, date } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, date, integer } from "drizzle-orm/pg-core";
 
 
-
-export const Frida = pgTable("Frida", {
+export const Ada = pgTable("Ada", {
     id: serial("id").primaryKey(),
-    nomProjet: text("nomProjet").notNull(),
+    studentProjectName: text("studentProjectName").notNull(),
+    dateCreat: text("DateCreat").notNull(),
+
 });
 
 
 export const Promo = pgTable("Promo", {
     id: serial("id").primaryKey(),
     nomPromo: text("nomPromo").notNull(),
-    dateStart: date("dateStart").notNull()
+    dateStart: date("dateStart").notNull(),
 });
 
 
-export const studentProject = pgTable("studentProject", {
-    id: serial("id").primaryKey(),
-    title: text("text").notNull(),
-    image: text("image").notNull(),
-    PersonnalLink: text("PersonnalLink").notNull(),
-    DemoLink: text("Demolink").notNull(),
-    DateCreat: text("DateCreat").notNull(),
-    PublicDate: text("PublicDate").notNull(),
-    Frida_id: serial("Frida_id").notNull(),
-    Promo_id: serial("Promo_id").notNull()
-});
+export const studentProject = pgTable(
+    "studentProject",
+    {
+        id: integer("id").primaryKey(),
+        title: text("title").notNull(),
+        image: text("image").notNull(),
+        GithubLink: text("GithubLink").notNull(),
+        DemoLink: text("DemoLink").notNull(),
+        PublicDate: text("PublicDate").notNull(),
+        Ada_id: integer("Ada_id").references(() => Ada.id),
+        Promo_id: integer("Promo_id").references(() => Promo.id),
+        
+    })

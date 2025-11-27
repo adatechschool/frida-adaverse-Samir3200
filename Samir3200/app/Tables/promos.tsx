@@ -1,18 +1,25 @@
 // creation de table Promo avec neon
+"use server";
 import { neon } from '@neondatabase/serverless';
 
 export default async function PromoTable() {
   async function create(formData: FormData) {
-    "use server";
-    const sql = neon(process.env.DATABASE_URL as string);
-    await sql`CREATE TABLE IF NOT EXISTS Promo (Promo TEXT)`;
-    const promos = formData.get("Promos");
-    await sql`INSERT INTO (Promos) VALUES (${promos})`;
+
+    const sql = neon(process.env.DATA_URL!);
+    await sql`CREATE TABLE IF NOT EXISTS Promo (
+      id serial PRIMARY KEY,
+      nomPromo text NOT NULL,
+      dateStart date NOT NULL
+    )`;
+    const nomPromo = formData.get("nomPromo") as string;
+    const dateStart = formData.get("dateStart") as string;
+    await sql`INSERT INTO Promo (nomPromo, dateStart) VALUES (${nomPromo}, ${dateStart})`;
   }
   return (
     <form action={create}>
-      <input type="text" placeholder="Table Promos" name="promos" />
-      <button type="submit">Submit</button>
+      <input type="text" placeholder="Nom de la promo" name="namePromo" required />
+      <input type="date" placeholder="Date de début" name="dateStart" required />
+      <button type="submit">Ajouter la promo</button>
     </form>
   );
 }

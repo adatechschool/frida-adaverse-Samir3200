@@ -1,3 +1,16 @@
+.project-list li {
+  /* ...existing code... */
+  background: #e0f2fe; /* Couleur de fond plus visible */
+  color: #0f172a;      /* Couleur du texte foncée */
+}
+
+.project-list li .project-link {
+  color: #0284c7;
+}
+.project-list li .project-link:hover {
+  color: #0369a1;
+  background: #bae6fd;
+}
 @import "tailwindcss";
 
 :root {
@@ -23,4 +36,76 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Page d'accueil personnalisée */
+.home-container {
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.home-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  color: #2563eb;
+  letter-spacing: 2px;
+  text-shadow: 1px 2px 8px #c7d2fe;
+}
+
+
+.project-list {
+  width: 100%;
+  max-width: 650px;
+  background: #f8fafc;
+  border-radius: 1.5rem;
+  box-shadow: 0 6px 32px 0 rgba(56,189,248,0.10);
+  padding: 2.2rem 2.7rem;
+  margin-bottom: 2rem;
+  border: 1px solid #e0e7ef;
+}
+
+.project-list li {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e0e7ef;
+  background: #fff;
+  border-radius: 0.8rem;
+  box-shadow: 0 2px 8px 0 rgba(56,189,248,0.04);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.project-list li:last-child {
+  border-bottom: none;
+}
+
+.project-link, .project-link:visited {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #0ea5e9;
+  text-decoration: none;
+  transition: color 0.2s, background 0.2s;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.4rem;
+}
+.project-link:hover {
+  color: #0369a1;
+  background: #e0f2fe;
+  text-decoration: underline;
+}
+
+.project-date {
+  font-size: 1rem;
+  color: #60a5fa;
+  margin: 0.2rem 0 0.1rem 0;
+}
+
+.project-hr {
+  border: none;
+  border-top: 1px dashed #bae6fd;
+  margin: 1rem 0 0 0;
 }

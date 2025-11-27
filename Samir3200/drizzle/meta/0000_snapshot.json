@@ -1,0 +1,169 @@
+{
+  "id": "413636f9-6a1b-49bf-ba31-5d38d05259c4",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.Ada": {
+      "name": "Ada",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "studentProjectName": {
+          "name": "studentProjectName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "DateCreat": {
+          "name": "DateCreat",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.Promo": {
+      "name": "Promo",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nomPromo": {
+          "name": "nomPromo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dateStart": {
+          "name": "dateStart",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.studentProject": {
+      "name": "studentProject",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "GithubLink": {
+          "name": "GithubLink",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "DemoLink": {
+          "name": "DemoLink",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "PublicDate": {
+          "name": "PublicDate",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Ada_id": {
+          "name": "Ada_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "Promo_id": {
+          "name": "Promo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "studentProject_Ada_id_Ada_id_fk": {
+          "name": "studentProject_Ada_id_Ada_id_fk",
+          "tableFrom": "studentProject",
+          "tableTo": "Ada",
+          "columnsFrom": [
+            "Ada_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "studentProject_Promo_id_Promo_id_fk": {
+          "name": "studentProject_Promo_id_Promo_id_fk",
+          "tableFrom": "studentProject",
+          "tableTo": "Promo",
+          "columnsFrom": [
+            "Promo_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

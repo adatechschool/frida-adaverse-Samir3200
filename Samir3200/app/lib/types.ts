@@ -2,9 +2,9 @@
  * Types et interfaces pour l'application
  */
 
-export interface Frida {
+export interface Ada {
     id: number;
-    nomProjet: string;
+    cityPromo: string;
 }
 
 export interface Promo {
