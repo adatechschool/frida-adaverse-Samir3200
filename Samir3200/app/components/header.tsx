@@ -11,8 +11,7 @@ export default function Header() {
                     <nav className="flex-1 flex justify-center items-center">
                         <ul className="flex space-x-24 text-base">
                             <li><Link href="/accueil" className="hover:underline">Accueil</Link></li>
-                            <li><Link href="/Liste des projets" className="hover:underline">Liste des projets</Link></li>
-                            <li><Link href="/Liste des promos" className="hover:underline">Liste des promos</Link></li>
+                            <li><Link href="/liste-projets" className="hover:underline">Liste des projets</Link></li>
                         </ul>
                     </nav>
                 </div>

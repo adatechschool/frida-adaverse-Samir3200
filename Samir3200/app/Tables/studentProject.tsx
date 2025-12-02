@@ -2,7 +2,6 @@
 "use server"
 
 import { neon } from '@neondatabase/serverless';
-import { studentProject } from '../lib/schemas';
 
 export default async function StudentTable() {
   async function create(formData: FormData) {

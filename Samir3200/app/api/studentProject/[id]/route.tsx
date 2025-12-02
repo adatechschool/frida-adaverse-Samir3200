@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { studentProject } from '@/app/lib/schemas';
+import { studentProjects } from '@/app/lib/schemas';
 import { data } from '@/app/lib/drizzle';
 import { eq } from 'drizzle-orm';
 
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
   const { id } = params;
-  const result = await data.select().from(studentProject).where(eq(studentProject.id, Number(id)));
+  const result = await data.select().from(studentProjects).where(eq(studentProjects.id, Number(id)));
   return NextResponse.json(result[0]);
 }
 

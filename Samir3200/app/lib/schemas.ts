@@ -1,31 +1,27 @@
-import { pgTable, serial, text, date, integer } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, date, integer, varchar } from 'drizzle-orm/pg-core';
 
-
-export const Ada = pgTable("Ada", {
-    id: serial("id").primaryKey(),
-    studentProjectName: text("studentProjectName").notNull(),
-    dateCreat: text("DateCreat").notNull(),
-
+// Table des projets Ada
+export const adaProjects = pgTable('adaProjects', {
+    id: serial('id').primaryKey(),
+    title: varchar('title', { length: 100 }).notNull(),
 });
 
-
-export const Promo = pgTable("Promo", {
-    id: serial("id").primaryKey(),
-    nomPromo: text("nomPromo").notNull(),
-    dateStart: date("dateStart").notNull(),
+// Table des promotions
+export const promos = pgTable('promos', {
+    id: serial('id').primaryKey(),
+    name: varchar('name', { length: 50 }).notNull(),
+    dateStart: date('date_start').notNull(),
 });
 
-
-export const studentProject = pgTable(
-    "studentProject",
-    {
-        id: integer("id").primaryKey(),
-        title: text("title").notNull(),
-        image: text("image").notNull(),
-        GithubLink: text("GithubLink").notNull(),
-        DemoLink: text("DemoLink").notNull(),
-        PublicDate: text("PublicDate").notNull(),
-        Ada_id: integer("Ada_id").references(() => Ada.id),
-        Promo_id: integer("Promo_id").references(() => Promo.id),
-        
-    })
+// Table des projets étudiants
+export const studentProjects = pgTable('studentProjects', {
+    id: serial('id').primaryKey(),
+    name: varchar('name', { length: 150 }).notNull(),
+    slug: varchar('slug', { length: 100 }),
+    githubUrl: text('github_url').notNull(),
+    demoUrl: text('demo_url'),
+    createdAt: date('created_at').notNull(),
+    publishedAt: date('published_at'), // null tant que non publié
+    promoId: integer('promo_id').references(() => promos.id),
+    adaProjectId: integer('ada_project_id').references(() => adaProjects.id),
+});

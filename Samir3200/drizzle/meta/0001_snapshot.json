@@ -1,6 +1,6 @@
 {
-  "id": "7db4dd27-81a2-4217-b5d5-28f7cc03f5a8",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "8c858784-d663-42fb-b0e4-e4e1688cc54d",
+  "prevId": "7db4dd27-81a2-4217-b5d5-28f7cc03f5a8",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -155,15 +155,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "studentProjects_slug_unique": {
-          "name": "studentProjects_slug_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
