@@ -1,5 +1,14 @@
 
 "use client";
+// Construit l'URL raw de thumbnail.png à partir du githubUrl
+function getThumbnailUrl(githubUrl: string) {
+  if (!githubUrl) return '';
+  const match = githubUrl.match(/github.com\/([^\/]+)\/([^\/]+)/);
+  if (!match) return '';
+  const user = match[1];
+  const repo = match[2];
+  return `https://raw.githubusercontent.com/${user}/${repo}/main/thumbnail.png`;
+}
 import { useEffect, useState } from "react";
 
 export default function Accueil() {
@@ -19,7 +28,7 @@ export default function Accueil() {
   const [adaProjects, setAdaProjects] = useState<any[]>([]);
   const [promos, setPromos] = useState<any[]>([]);
 
-  // Helper to fetch all projects
+  // Fetch de tous les projets étudiants
   const fetchStudentProjects = () => {
     fetch("/api/studentProject")
       .then((res) => res.json())
@@ -48,149 +57,158 @@ export default function Accueil() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(120deg, #f0f9ff 60%, #e0f2fe 100%)', padding: '48px 0', position: 'relative' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #1e293b 0%, #2563eb 100%)', padding: '48px 0', position: 'relative', fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
       <button
         style={{
           position: 'fixed',
           top: 100,
           right: 48,
           zIndex: 3000,
-          background: '#0e7490',
+          background: 'linear-gradient(90deg, #2563eb 0%, #1e293b 100%)',
           color: 'white',
-          border: 'none',
-          borderRadius: 10,
-          padding: '14px 32px',
+          border: '2px solid #ef4444',
+          borderRadius: 18,
+          padding: '12px 32px',
           fontWeight: 800,
-          fontSize: 20,
-          boxShadow: '0 2px 12px #16c3f522',
+          fontSize: 18,
+          boxShadow: '0 8px 32px #1e293b44',
           cursor: 'pointer',
           letterSpacing: 1,
-          transition: 'background 0.2s',
+          backdropFilter: 'blur(4px)',
+          transition: 'background 0.3s, box-shadow 0.3s',
+        }}
+        onMouseOver={e => {
+          e.currentTarget.style.background = 'linear-gradient(90deg, #ef4444 0%, #1e293b 100%)';
+          e.currentTarget.style.boxShadow = '0 12px 40px #ef444444';
+        }}
+        onMouseOut={e => {
+          e.currentTarget.style.background = 'linear-gradient(90deg, #2563eb 0%, #1e293b 100%)';
+          e.currentTarget.style.boxShadow = '0 8px 32px #1e293b44';
         }}
         onClick={() => setShowForm(true)}
       >
         Proposer un projet
       </button>
-            {/* Pop-up formulaire d'ajout de projet */}
-            {showForm && (
-              <div style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                background: 'rgba(240,249,255,0.92)',
-                zIndex: 4000,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backdropFilter: 'blur(2px)'
-              }}>
-                <div style={{
-                  background: 'white',
-                  borderRadius: 18,
-                  padding: 48,
-                  minWidth: 420,
-                  maxWidth: 520,
-                  boxShadow: '0 12px 40px #16c3f577',
-                  position: 'relative',
-                  color: '#0e1a2b',
-                  fontFamily: 'Segoe UI, Arial, sans-serif',
-                  fontSize: 17,
-                  lineHeight: 1.5,
-                  letterSpacing: 0.1,
-                }}>
-                  <button onClick={() => setShowForm(false)} style={{ position: 'absolute', top: 12, right: 16, fontSize: 28, background: 'none', border: 'none', cursor: 'pointer', color: '#0e7490', fontWeight: 700 }}>×</button>
-                  <h2 style={{ fontWeight: 800, fontSize: 24, marginBottom: 18, color: '#0e7490', letterSpacing: 0.5 }}>Proposer un projet</h2>
-                  <form onSubmit={async (e) => {
-                    e.preventDefault();
-                    setFormLoading(true);
-                    setFormError('');
-                    setFormSuccess('');
-                    try {
-                      const res = await fetch('/api/studentProject', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          name: formData.title,
-                          githubUrl: formData.githubUrl,
-                          demoUrl: formData.demoUrl,
-                          promoId: formData.promoId,
-                          adaProjectId: formData.adaProjectId,
-                        }),
-                      });
-                      if (!res.ok) throw new Error('Erreur lors de l\'ajout');
-                      setFormSuccess('Projet ajouté avec succès !');
-                      setFormData({ title: '', githubUrl: '', demoUrl: '', promoId: '', adaProjectId: '' });
-                      // Refresh projects after successful submission
-                      fetchStudentProjects();
-                    } catch (err: any) {
-                      setFormError(err.message || 'Erreur inconnue');
-                    } finally {
-                      setFormLoading(false);
-                    }
-                  }}>
-                    <div style={{ marginBottom: 18 }}>
-                      <label style={{ fontWeight: 700 }}>Titre du projet</label><br />
-                      <input type="text" required value={formData.title} onChange={e => setFormData(f => ({ ...f, title: e.target.value }))} style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #bae6fd', fontSize: 16, marginTop: 4 }} />
-                    </div>
-                    <div style={{ marginBottom: 18 }}>
-                      <label style={{ fontWeight: 700 }}>Lien GitHub</label><br />
-                      <input type="url" required value={formData.githubUrl} onChange={e => setFormData(f => ({ ...f, githubUrl: e.target.value }))} style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #bae6fd', fontSize: 16, marginTop: 4 }} />
-                    </div>
-                    <div style={{ marginBottom: 18 }}>
-                      <label style={{ fontWeight: 700 }}>Lien Démo (optionnel)</label><br />
-                      <input type="url" value={formData.demoUrl} onChange={e => setFormData(f => ({ ...f, demoUrl: e.target.value }))} style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #bae6fd', fontSize: 16, marginTop: 4 }} />
-                    </div>
-                    <div style={{ marginBottom: 18 }}>
-                      <label style={{ fontWeight: 700 }}>Promo</label><br />
-                      <select required value={formData.promoId} onChange={e => setFormData(f => ({ ...f, promoId: e.target.value }))} style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #bae6fd', fontSize: 16, marginTop: 4 }}>
-                        <option value="">Sélectionner une promo</option>
-                        {promos.map((promo: any) => (
-                          <option key={promo.id} value={promo.id}>{promo.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div style={{ marginBottom: 28 }}>
-                      <label style={{ fontWeight: 700 }}>Projet Ada</label><br />
-                      <select required value={formData.adaProjectId} onChange={e => setFormData(f => ({ ...f, adaProjectId: e.target.value }))} style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #bae6fd', fontSize: 16, marginTop: 4 }}>
-                        <option value="">Sélectionner un projet Ada</option>
-                        {adaProjects.map((ada: any) => (
-                          <option key={ada.id} value={ada.id}>{ada.title}</option>
-                        ))}
-                      </select>
-                    </div>
-                    {formError && <div style={{ color: '#dc2626', marginBottom: 12 }}>{formError}</div>}
-                    {formSuccess && <div style={{ color: '#059669', marginBottom: 12 }}>{formSuccess}</div>}
-                    <button type="submit" disabled={formLoading} style={{
-                      background: '#0e7490',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: 8,
-                      padding: '12px 32px',
-                      fontWeight: 800,
-                      fontSize: 18,
-                      cursor: formLoading ? 'not-allowed' : 'pointer',
-                      boxShadow: '0 2px 8px #16c3f522',
-                      marginTop: 8,
-                      opacity: formLoading ? 0.7 : 1
-                    }}>{formLoading ? 'Ajout...' : 'Ajouter le projet'}</button>
-                  </form>
-                </div>
+      {/* Pop-up formulaire d'ajout de projet */}
+      {showForm && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          background: 'rgba(240,249,255,0.92)',
+          zIndex: 4000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backdropFilter: 'blur(2px)'
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: 18,
+            padding: 48,
+            minWidth: 420,
+            maxWidth: 520,
+            boxShadow: '0 12px 40px #16c3f577',
+            position: 'relative',
+            color: '#0e1a2b',
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+            fontSize: 17,
+            lineHeight: 1.5,
+            letterSpacing: 0.1,
+          }}>
+            <button onClick={() => setShowForm(false)} style={{ position: 'absolute', top: 12, right: 16, fontSize: 28, background: 'none', border: 'none', cursor: 'pointer', color: '#0e7490', fontWeight: 700 }}>×</button>
+            <h2 style={{ fontWeight: 800, fontSize: 24, marginBottom: 18, color: '#0e7490', letterSpacing: 0.5 }}>Proposer un projet</h2>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              setFormLoading(true);
+              setFormError('');
+              setFormSuccess('');
+              try {
+                const res = await fetch('/api/studentProject', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    name: formData.title,
+                    githubUrl: formData.githubUrl,
+                    demoUrl: formData.demoUrl,
+                    promoId: formData.promoId,
+                    adaProjectId: formData.adaProjectId,
+                  }),
+                });
+                if (!res.ok) throw new Error('Projet non ajouté. ')
+                setFormSuccess('Projet ajouté avec succès !');
+                setFormData({ title: '', githubUrl: '', demoUrl: '', promoId: '', adaProjectId: '' });
+                // Refresh des projets après ajout
+                fetchStudentProjects();
+              } catch (err: any) {
+                setFormError(err.message || 'Erreur inconnue');
+              } finally {
+                setFormLoading(false);
+              }
+            }}>
+              <div style={{ marginBottom: 18 }}>
+                <label style={{ fontWeight: 700 }}>Titre du projet</label><br />
+                <input type="text" required value={formData.title} onChange={e => setFormData(f => ({ ...f, title: e.target.value }))} style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #bae6fd', fontSize: 16, marginTop: 4 }} />
               </div>
-            )}
+              <div style={{ marginBottom: 18 }}>
+                <label style={{ fontWeight: 700 }}>Lien GitHub</label><br />
+                <input type="url" required value={formData.githubUrl} onChange={e => setFormData(f => ({ ...f, githubUrl: e.target.value }))} style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #bae6fd', fontSize: 16, marginTop: 4 }} />
+              </div>
+              <div style={{ marginBottom: 18 }}>
+                <label style={{ fontWeight: 700 }}>Lien Démo (si existe)</label><br />
+                <input type="url" value={formData.demoUrl} onChange={e => setFormData(f => ({ ...f, demoUrl: e.target.value }))} style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #bae6fd', fontSize: 16, marginTop: 4 }} />
+              </div>
+              <div style={{ marginBottom: 18 }}>
+                <label style={{ fontWeight: 700 }}>Promo</label><br />
+                <select required value={formData.promoId} onChange={e => setFormData(f => ({ ...f, promoId: e.target.value }))} style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #bae6fd', fontSize: 16, marginTop: 4 }}>
+                  <option value="">Sélectionner une promo</option>
+                  {promos.map((promo: any) => (
+                    <option key={promo.id} value={promo.id}>{promo.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div style={{ marginBottom: 28 }}>
+                <label style={{ fontWeight: 700 }}>Projet Ada</label><br />
+                <select required value={formData.adaProjectId} onChange={e => setFormData(f => ({ ...f, adaProjectId: e.target.value }))} style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #bae6fd', fontSize: 16, marginTop: 4 }}>
+                  <option value="">Sélectionner un projet Ada</option>
+                  {adaProjects.map((ada: any) => (
+                    <option key={ada.id} value={ada.id}>{ada.title}</option>
+                  ))}
+                </select>
+              </div>
+              {formError && <div style={{ color: '#dc2626', marginBottom: 12 }}>{formError}</div>}
+              {formSuccess && <div style={{ color: '#059669', marginBottom: 12 }}>{formSuccess}</div>}
+              <button type="submit" disabled={formLoading} style={{
+                background: '#0e7490',
+                color: 'white',
+                border: 'none',
+                borderRadius: 8,
+                padding: '12px 32px',
+                fontWeight: 800,
+                fontSize: 18,
+                cursor: formLoading ? 'not-allowed' : 'pointer',
+                boxShadow: '0 2px 8px #16c3f522',
+                marginTop: 8,
+                opacity: formLoading ? 0.7 : 1
+              }}>{formLoading ? 'Ajout...' : 'Ajouter le projet'}</button>
+            </form>
+          </div>
+        </div>
+      )}
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 24px' }}>
         <h1 style={{
-          color: '#0e7490',
+          color: '#fff',
           fontWeight: 900,
-          fontSize: 38,
+          fontSize: 40,
           marginBottom: 40,
           textAlign: 'center',
           letterSpacing: 2,
-          textShadow: '0 2px 12px #16c3f522',
-          fontFamily: 'Segoe UI, Arial, sans-serif',
+          textShadow: '0 4px 24px #1e293b88',
+          fontFamily: 'Inter, Segoe UI, Arial, sans-serif',
         }}>
-          <span style={{ color: '#16c3f5' }}>Projets ADA</span> <span style={{ fontWeight: 400, fontSize: 28, color: '#334155' }}></span>
+          <span style={{ color: '#2563eb', fontWeight: 900, letterSpacing: 2 }}>Projets ADA</span> <span style={{ fontWeight: 400, fontSize: 28, color: '#ef4444', marginLeft: 8 }}>by Frida</span>
         </h1>
         {adaProjects.length === 0 ? (
           <div style={{ textAlign: 'center', color: '#64748b', fontSize: 20, marginTop: 60 }}>Chargement des catégories...</div>
@@ -198,13 +216,14 @@ export default function Accueil() {
           Object.entries(grouped).map(([cat, projects]) => (
             <section key={cat} style={{
               marginBottom: 56,
-              background: '#fff',
-              borderRadius: 18,
-              boxShadow: '0 4px 32px #16c3f522',
-              padding: '32px 28px 24px 28px',
-              border: '1.5px solid #bae6fd',
+              background: 'rgba(30,41,59,0.85)',
+              borderRadius: 28,
+              boxShadow: '0 12px 40px #2563eb44',
+              padding: '48px 44px 36px 44px',
+              border: '2px solid #2563eb',
               position: 'relative',
               overflow: 'hidden',
+              backdropFilter: 'blur(6px)',
             }}>
               <h2 style={{
                 color: '#0e7490',
@@ -231,61 +250,91 @@ export default function Accueil() {
                 ) : (
                   projects.map((p) => (
                     <div key={p.id} style={{
-                      background: 'linear-gradient(120deg, #f8fafc 60%, #e0f2fe 100%)',
-                      borderRadius: 18,
-                      boxShadow: '0 4px 24px #16c3f533',
-                      padding: 32,
+                      background: 'rgba(37,99,235,0.85)',
+                      borderRadius: 22,
+                      boxShadow: '0 8px 32px #1e293b44',
+                      padding: 40,
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
                       alignItems: 'flex-start',
-                      minHeight: 200,
+                      minHeight: 240,
                       minWidth: 0,
-                      transition: 'box-shadow 0.2s',
-                      border: '1px solid #bae6fd',
+                      transition: 'box-shadow 0.3s',
+                      border: '2px solid #ef4444',
                       position: 'relative',
                       overflow: 'hidden',
                       cursor: 'pointer',
+                      backdropFilter: 'blur(4px)',
                     }}
                       onMouseOver={e => (e.currentTarget.style.boxShadow = '0 8px 32px #16c3f577')}
                       onMouseOut={e => (e.currentTarget.style.boxShadow = '0 4px 24px #16c3f533')}
                     >
+                      {/* Image du projet (thumbnail) */}
+                      <div style={{ width: '100%', height: 160, background: '#e0f2fe', borderRadius: 12, marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                        <img
+                          src={getThumbnailUrl(p.githubUrl) || '/images/no_image_available.png'}
+                          alt="Aperçu du projet"
+                          style={{ width: 'auto', height: '100%', maxHeight: 150, objectFit: 'contain', background: '#e0f2fe', opacity: 0.95 }}
+                          onError={e => { e.currentTarget.src = '/images/no_image_available.png'; }}
+                        />
+                      </div>
                       <div style={{ fontWeight: 800, fontSize: 20, color: '#0e7490', marginBottom: 8, letterSpacing: 0.5, position: 'relative', width: '100%' }}>
                         {p.title}
                         <span style={{
                           position: 'absolute',
                           top: 0,
                           right: 0,
-                          background: '#16c3f5',
+                          background: 'linear-gradient(90deg, #ef4444 0%, #1e293b 100%)',
                           color: 'white',
                           fontWeight: 700,
                           fontSize: 13,
                           borderRadius: '0 8px 0 8px',
                           padding: '3px 14px',
-                          boxShadow: '0 2px 8px #16c3f522',
+                          boxShadow: '0 2px 8px #ef444444',
                           letterSpacing: 0.5,
-                          zIndex: 2
+                          zIndex: 2,
+                          border: '2px solid #2563eb',
                         }}>{getPromoName(p.promoId)}</span>
                       </div>
                       {/* ...autres infos projet... */}
                       <div style={{ position: 'absolute', bottom: 18, right: 24 }}>
-                        <button
-                          style={{
-                            background: '#0e7490',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: 8,
-                            padding: '7px 18px',
-                            fontWeight: 700,
-                            fontSize: 15,
-                            cursor: 'pointer',
-                            boxShadow: '0 2px 8px #16c3f522',
-                            transition: 'background 0.2s',
-                          }}
-                          onClick={() => setSelectedProject(p)}
-                        >
-                          Voir plus
-                        </button>
+                          <button
+                            style={{
+                              background: 'linear-gradient(90deg, #ef4444 0%, #1e293b 100%)',
+                              color: 'white',
+                              border: '2px solid #2563eb',
+                              borderRadius: 14,
+                              padding: '10px 28px',
+                              fontWeight: 700,
+                              fontSize: 17,
+                              cursor: 'pointer',
+                              boxShadow: '0 4px 24px #ef444444',
+                              transition: 'background 0.3s, box-shadow 0.3s',
+                              backdropFilter: 'blur(2px)',
+                            }}
+                            onMouseOver={e => {
+                              e.currentTarget.style.background = 'linear-gradient(90deg, #2563eb 0%, #ef4444 100%)';
+                              e.currentTarget.style.boxShadow = '0 12px 40px #2563eb44';
+                            }}
+                            onMouseOut={e => {
+                              e.currentTarget.style.background = 'linear-gradient(90deg, #ef4444 0%, #1e293b 100%)';
+                              e.currentTarget.style.boxShadow = '0 4px 24px #ef444444';
+                            }}
+                            onClick={() => {
+                              // Extract category from grouping (cat)
+                              // Extract GitHub username from repo URL
+                              const category = cat;
+                              let githubUsername = '';
+                              try {
+                                const match = p.githubUrl.match(/github.com\/(.*?)\//);
+                                githubUsername = match ? match[1] : 'unknown';
+                              } catch {}
+                              window.location.href = `/studentProject/${encodeURIComponent(category)}/${encodeURIComponent(githubUsername)}/${encodeURIComponent(p.id)}`;
+                            }}
+                          >
+                            Voir plus
+                          </button>
                       </div>
                             {/* Modal détails projet */}
                             {selectedProject && (
@@ -295,28 +344,30 @@ export default function Accueil() {
                                 left: 0,
                                 width: '100vw',
                                 height: '100vh',
-                                background: 'rgba(240,249,255,0.85)',
-                                zIndex: 2000,
+                                background: 'rgba(30,41,59,0.92)', // overlay noir
+                                zIndex: 9999,
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                backdropFilter: 'blur(2px)'
+                                backdropFilter: 'blur(6px)'
                               }}>
                                 <div style={{
-                                  background: 'white',
-                                  borderRadius: 18,
-                                  padding: 72,
-                                  minWidth: 900,
-                                  maxWidth: 1500,
-                                  minHeight: 600,
+                                  background: 'linear-gradient(135deg, #2563eb 0%, #1e293b 100%)',
+                                  borderRadius: 32,
+                                  padding: 64,
+                                  minWidth: 700,
+                                  maxWidth: 1100,
+                                  minHeight: 480,
                                   height: '70vh',
-                                  boxShadow: '0 12px 40px #16c3f577',
+                                  boxShadow: '0 16px 64px #000a',
                                   position: 'relative',
-                                  color: '#0e1a2b',
-                                  fontFamily: 'Segoe UI, Arial, sans-serif',
-                                  fontSize: 17,
-                                  lineHeight: 1.5,
+                                  color: '#fff',
+                                  fontFamily: 'Inter, Segoe UI, Arial, sans-serif',
+                                  fontSize: 18,
+                                  lineHeight: 1.6,
                                   letterSpacing: 0.1,
+                                  border: '2px solid #ef4444',
+                                  zIndex: 10000,
                                 }}>
                                   <button onClick={() => setSelectedProject(null)} style={{ position: 'absolute', top: 12, right: 16, fontSize: 28, background: 'none', border: 'none', cursor: 'pointer', color: '#0e7490', fontWeight: 700 }}>×</button>
                                   <div style={{ position: 'absolute', top: 24, left: 32, fontSize: 18, color: '#0e7490', fontWeight: 700, background: '#e0f2fe', borderRadius: 8, padding: '6px 18px', boxShadow: '0 2px 8px #16c3f522', zIndex: 2 }}>

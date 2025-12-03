@@ -15,7 +15,7 @@ interface UserGroup {
 }
 
 export default function ListeProjets() {
-  const users: UserGroup[] = data;
+  const users: UserGroup[] = Array.isArray(data) ? (data as UserGroup[]) : [];
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(120deg, #f0f9ff 60%, #e0f2fe 100%)', padding: '48px 0' }}>
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 24px' }}>
